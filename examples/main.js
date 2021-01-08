@@ -1,9 +1,12 @@
 
-let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [];
-
+let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,SPEED = 0,lock = true;
 const clock = new THREE.Clock();
-
+let fishaxisx = new THREE.Vector3(1,0,0);
+let fishaxisy = new THREE.Vector3(0,1,0); 
+let fishaxisz = new THREE.Vector3(0,0,1); 
 let mixer;
+let fishloc= new THREE.Vector3();
+let fishlocafter= new THREE.Vector3();
 
 init();
 animate();
@@ -13,8 +16,7 @@ function init() {
     const container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
-    camera.position.set( 100, 800, 300 );
+
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 'skyblue' );
@@ -67,7 +69,8 @@ function init() {
 
         } );
         object.position.y = 800;
-        scene.add( object );
+        fish = object
+        scene.add( fish );
 
     } );
 
@@ -91,13 +94,13 @@ function init() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.shadowMap.enabled = true;
     container.appendChild( renderer.domElement );
+    
+    setupControls();
+    setControlsOrbit();
 
-    const controls = new THREE.OrbitControls( camera, renderer.domElement );
-    controls.target.set( 0, 800, 0 );
-    controls.update();
 
     window.addEventListener( 'resize', onWindowResize, false );
-
+    document.addEventListener('keydown', ditekan);
     // stats
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -112,12 +115,133 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
+function ditekan(event) {
+    
+    
+    if (event.keyCode == 70) // F
+    {
+        // lock = !lock;
+        // camera.add(fishloc);
+        // fish.lookAt(camera.position);
+        // bool_controls = !bool_controls;
+        // if(bool_controls){
+        //     setControlsOrbit();
+        // }else{
+        //     setControlsFirstPerson();
+        // }
+    }
+    if (event.keyCode == 32) // Space = 65
+    {
+        fish.translateY(1);
+    }
+    if (event.keyCode == 17) // Control
+    {
+        fish.translateY(-1);
+    }
 
-//
+    if (event.keyCode ==  87) // W = 87
+    {
+        SPEED += 0.5;
+        // fish.translateZ(10);
+    } 
+    if (event.keyCode == 83) // S = 83
+    {
+        // fish.translateZ(-10);
+        SPEED -= 0.5;
+        
+    } 
+    if (event.keyCode == 65) // A = 65
+    {
+        
+        // fish.rotation.y+=0.31;
+        fish.rotateOnAxis (fishaxisy,0.11,0.2);
+        // fish.rotation.y+=0.31;
+    } 
+    if (event.keyCode == 68) // D = 68
+    {
+        // fish.rotation.y-=0.31;
+        fish.rotateOnAxis (fishaxisy,-0.11,0.2);
+        // fish.rotation.y-=0.31;
+    } 
 
+    if (event.keyCode == 39) // right
+    {
+        // fish.rotation.z-=0.1;
+        fish.rotateOnAxis (fishaxisz,0.1);
+    } 
+    if (event.keyCode == 37) // left
+    {
+        // fish.rotation.z+=0.1;
+        fish.rotateOnAxis (fishaxisz,-0.1);
+    } 
+    if (event.keyCode ==  38) // up 
+    {
+        // fish.rotation.x-=0.1;
+        
+        fish.rotateOnAxis (fishaxisx,-0.1);
+    } 
+    if (event.keyCode ==  40) // down
+    {
+        // fish.rotation.x+=0.1;
+        fish.rotateOnAxis (fishaxisx,0.1);
+    } 
+    // if (event.keyCode ==  69) // E 
+    // {
+    //     fish.rotation.y-=1;
+    // } 
+    // if (event.keyCode ==  81) // Q
+    // {
+    //     fish.rotation.y+=1;
+    // } 
+  }d
+function setupControls() {
+    cam1 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
+    
+    // cam2 = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
+    // con1 = new THREE.FirstPersonControls( cam2 , renderer.domElement);
+    con1 = new THREE.OrbitControls( cam1 , renderer.domElement);
+}
+function setControlsFirstPerson() {
+    // camera = cam1;
+    controls = con1;
+    camera.position.set( 0, 900, -190 );
+    controls.target.set( 0, 800, 0 );
+    // controls.lookkAt(0,800,0);
+}
+function setControlsOrbit() {
+    camera = cam1;
+    camera.position.set( 0, 900, -190 );
+    controls = con1;
+    // fish.getWorldPosition(200,800,0);
+    controls.target.set( 0, 800, 0 );
+}
+// function followfish(){
+//     var relativeCameraOffset = new THREE.Vector3(0,0,-250);
+//     var cameraOffset = fish.localToWorld (relativeCameraOffset);
+//     // camera.position.copy (cameraOffset);
+//     camera.position.lerp(cameraOffset, 0.2);
+//     camera.lookAt(fish.position);
+
+// }
+function fishmovement(){
+    fish.getWorldPosition(fishloc);
+    fish.translateZ(SPEED);
+    fish.getWorldPosition(fishlocafter);
+    fishlocafter.sub(fishloc);
+    camera.position.add(fishlocafter);
+    camera.lookAt(fish.position);
+}
 function animate() {
 
     requestAnimationFrame( animate );
+
+    // if(lock){
+    //     followfish();// camera
+    // }
+    fishmovement();
+    
+
+
     // remove food
     if (food.length > 0){
         for (var i =0; i<food.length; i++){
