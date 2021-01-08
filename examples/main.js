@@ -1,5 +1,12 @@
 
-let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [];
+let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [], sun, sky, pmremGenerator, fish;
+
+var hour
+
+var parameters = {
+    inclination: 0.49,
+    azimuth: 0.205
+};
 
 const clock = new THREE.Clock();
 
@@ -17,7 +24,7 @@ function init() {
     camera.position.set( 100, 800, 300 );
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 'grey' );
+    scene.background = new THREE.Color( 'skyblue' );
     //scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
     const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 , 1 ); //0x444444
@@ -82,6 +89,15 @@ function init() {
             }
         } );
 
+        //Texture Aquarium
+        tLoader.load(`models/Texture/Pasir.jpg`, function(texture){
+            object.traverse( function ( child ) {
+                if ( child.isMesh ){
+                    child.material.map = texture;
+                }
+            } );
+        });
+
         scene.add( object );
     } );
 
@@ -95,6 +111,22 @@ function init() {
     const controls = new THREE.OrbitControls( camera, renderer.domElement );
     controls.target.set( 0, 800, 0 );
     controls.update();
+
+    // add sky
+    sky = new THREE.Sky();
+    sky.scale.setScalar( 10000 );
+    scene.add( sky );
+
+    const skyUniforms = sky.material.uniforms;
+
+    skyUniforms[ 'turbidity' ].value = 10;
+    skyUniforms[ 'rayleigh' ].value = 2;
+    skyUniforms[ 'mieCoefficient' ].value = 0.005;
+    skyUniforms[ 'mieDirectionalG' ].value = 0.8;
+
+    pmremGenerator = new THREE.PMREMGenerator( renderer );
+
+    sun = new THREE.Vector3();
 
     window.addEventListener( 'resize', onWindowResize, false );
 
@@ -121,8 +153,8 @@ function animate() {
     // remove food
     if (food.length > 0){
         for (var i =0; i<food.length; i++){
-            if (food[i].position.y > 0){
-                food[i].position.y -= 1;
+            if (food[i].position.y > 350){
+                food[i].position.y -= 2;
             }
             else {
                 removeFood(food[i], i);
@@ -135,11 +167,31 @@ function animate() {
         lastSpawn=time;
         addFood();
     }
+    if (parameters.azimuth < 1){ 
+        parameters.azimuth += 0.0001;
+    }
+    else parameters.azimuth = 0;
+    updateSun();
 
     const delta = clock.getDelta();
     if ( mixer ) mixer.update( delta );
     renderer.render( scene, camera );
     stats.update();
+}
+
+function updateSun() {
+
+    const theta = Math.PI * ( parameters.inclination - 0.5 );
+    const phi = 2 * Math.PI * ( parameters.azimuth - 0.5 );
+
+    sun.x = Math.cos( phi );
+    sun.y = Math.sin( phi ) * Math.sin( theta );
+    sun.z = Math.sin( phi ) * Math.cos( theta );
+
+    sky.material.uniforms[ 'sunPosition' ].value.copy( sun );
+
+    scene.environment = pmremGenerator.fromScene( sky ).texture;
+
 }
 
 function addFood(){
@@ -153,6 +205,8 @@ function addFood(){
                 child.receiveShadow = false;
             }
         } );
+
+        object.scale.setScalar(0.3);
 
         object.position.x = (Math.random() * 1400) + (Math.random() * -1400);  ;  
         object.position.y = 1500;
