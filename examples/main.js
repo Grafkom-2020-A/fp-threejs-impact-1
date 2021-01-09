@@ -69,6 +69,8 @@ function init() {
 
         } );
         object.position.y = 800;
+
+        
         fish = object
         scene.add( fish );
 
@@ -141,12 +143,14 @@ function ditekan(event) {
 
     if (event.keyCode ==  87) // W = 87
     {
+        if(SPEED<10)
         SPEED += 0.5;
         // fish.translateZ(10);
     } 
     if (event.keyCode == 83) // S = 83
     {
         // fish.translateZ(-10);
+        if(SPEED>-3)
         SPEED -= 0.5;
         
     } 
@@ -231,6 +235,28 @@ function fishmovement(){
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
 }
+function worldcollider(){
+    fish.getWorldPosition(fishloc);
+    if(fishloc.getComponent (0)>1550){
+        fish.position.x-=SPEED+10;
+    }
+    if(fishloc.getComponent (0)<-1550){
+        fish.position.x+=SPEED+10;
+    }
+    if(fishloc.getComponent (1)<350){
+        fish.position.y+=SPEED+10;
+    }
+    if(fishloc.getComponent (2)>850)   {
+        fish.position.z-=SPEED+10;
+    }
+    if(fishloc.getComponent (2)<-850){
+        fish.position.z+=SPEED+10;
+    }
+    fish.getWorldPosition(fishlocafter);
+    fishlocafter.sub(fishloc);
+    camera.position.add(fishlocafter);
+    camera.lookAt(fish.position);
+}
 function animate() {
 
     requestAnimationFrame( animate );
@@ -239,7 +265,7 @@ function animate() {
     //     followfish();// camera
     // }
     fishmovement();
-    
+    worldcollider();
 
 
     // remove food
