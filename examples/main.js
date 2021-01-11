@@ -139,20 +139,20 @@ function ditekan(event) {
     }
     if (event.keyCode == 17) // Control
     {
-        SPEED = -10;
+        SPEED = 0;
         //fish.translateY(-1);
     }
 
     if (event.keyCode ==  87) // W = 87
     {
         if(SPEED<10)
-        SPEED += 0.5;
+        SPEED += 1.0;
         // fish.translateZ(10);
     } 
     if (event.keyCode == 83) // S = 83
     {
         // fish.translateZ(-10);
-        if(SPEED>-3)
+        if(SPEED>0)
         SPEED -= 0.3;
         
     } 
@@ -254,6 +254,22 @@ function worldcollider(){
     if(fishloc.getComponent (2)<-850){
         fish.position.z+=SPEED+10;
     }
+    
+    if(fishloc.getComponent (0)>1500){
+        SPEED = 0;
+    }
+    if(fishloc.getComponent (0)<-1500){
+        SPEED = 0;
+    }
+    if(fishloc.getComponent (1)<370){
+        SPEED = 0;
+    }
+    if(fishloc.getComponent (2)>830)   {
+        SPEED = 0;
+    }
+    if(fishloc.getComponent (2)<-850){
+        SPEED = 0;
+    }
     fish.getWorldPosition(fishlocafter);
     fishlocafter.sub(fishloc);
     camera.position.add(fishlocafter);
@@ -268,11 +284,11 @@ function animate() {
         followfish();// camera
     }
     if(SPEED>0){
-        SPEED -=0.02;
-    }else if(SPEED<0){
-        SPEED +=0.01;
+        SPEED -=0.05;
     }
-
+    if(SPEED <0){
+        SPEED = 0;
+    }
     worldcollider();
 
 
