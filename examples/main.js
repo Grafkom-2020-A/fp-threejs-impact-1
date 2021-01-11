@@ -132,13 +132,15 @@ function ditekan(event) {
         //     setControlsFirstPerson();
         // }
     }
-    if (event.keyCode == 32) // Space = 65
+    if (event.keyCode == 32) // Shift
     {
-        fish.translateY(1);
+        SPEED = 30;
+        ///fish.translateY(1);
     }
     if (event.keyCode == 17) // Control
     {
-        fish.translateY(-1);
+        SPEED = -10;
+        //fish.translateY(-1);
     }
 
     if (event.keyCode ==  87) // W = 87
@@ -151,7 +153,7 @@ function ditekan(event) {
     {
         // fish.translateZ(-10);
         if(SPEED>-3)
-        SPEED -= 0.5;
+        SPEED -= 0.3;
         
     } 
     if (event.keyCode == 65) // A = 65
@@ -265,6 +267,12 @@ function animate() {
     if(lock){
         followfish();// camera
     }
+    if(SPEED>0){
+        SPEED -=0.02;
+    }else if(SPEED<0){
+        SPEED +=0.01;
+    }
+
     worldcollider();
 
 
