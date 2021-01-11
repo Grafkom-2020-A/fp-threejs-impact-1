@@ -1,5 +1,5 @@
 
-let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,SPEED = 0,lock = true;
+let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,SPEED = 0,lock = false;
 const clock = new THREE.Clock();
 let fishaxisx = new THREE.Vector3(1,0,0);
 let fishaxisy = new THREE.Vector3(0,1,0); 
@@ -132,7 +132,7 @@ function ditekan(event) {
         //     setControlsFirstPerson();
         // }
     }
-    if (event.keyCode == 32) // Shift
+    if (event.keyCode == 16) // Shift
     {
         SPEED = 30;
         ///fish.translateY(1);
