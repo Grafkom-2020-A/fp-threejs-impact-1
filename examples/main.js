@@ -122,7 +122,7 @@ function ditekan(event) {
     
     if (event.keyCode == 70) // F
     {
-        // lock = !lock;
+        lock = !lock;
         // camera.add(fishloc);
         // fish.lookAt(camera.position);
         // bool_controls = !bool_controls;
@@ -219,14 +219,14 @@ function setControlsOrbit() {
     // fish.getWorldPosition(200,800,0);
     controls.target.set( 0, 800, 0 );
 }
-// function followfish(){
-//     var relativeCameraOffset = new THREE.Vector3(0,0,-250);
-//     var cameraOffset = fish.localToWorld (relativeCameraOffset);
-//     // camera.position.copy (cameraOffset);
-//     camera.position.lerp(cameraOffset, 0.2);
-//     camera.lookAt(fish.position);
+function followfish(){
+    var relativeCameraOffset = new THREE.Vector3(0,0,-250);
+    var cameraOffset = fish.localToWorld (relativeCameraOffset);
+    // camera.position.copy (cameraOffset);
+    camera.position.lerp(cameraOffset, 0.2);
+    camera.lookAt(fish.position);
 
-// }
+}
 function fishmovement(){
     fish.getWorldPosition(fishloc);
     fish.translateZ(SPEED);
@@ -261,10 +261,10 @@ function animate() {
 
     requestAnimationFrame( animate );
 
-    // if(lock){
-    //     followfish();// camera
-    // }
     fishmovement();
+    if(lock){
+        followfish();// camera
+    }
     worldcollider();
 
 
