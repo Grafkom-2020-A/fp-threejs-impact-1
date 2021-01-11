@@ -77,7 +77,7 @@ function init() {
     } );
 
     // model aquarium
-    loader.load( 'models/FBX_M/Aquarium-opt.fbx', function ( object ) {
+    loader.load( '../FBX/Aquarium-opt.fbx', function ( object ) {
 
         object.traverse( function ( child ) {
 
@@ -173,7 +173,7 @@ function ditekan(event) {
     if (event.keyCode == 39) // right
     {
         // fish.rotation.z-=0.1;
-        fish.rotateOnAxis (fishaxisz,0.1);
+        //fish.rotateOnAxis (fishaxisz,0.1);
     } 
     if (event.keyCode == 37) // left
     {
@@ -183,8 +183,7 @@ function ditekan(event) {
     if (event.keyCode ==  38) // up 
     {
         // fish.rotation.x-=0.1;
-        
-        fish.rotateOnAxis (fishaxisx,-0.1);
+        //fish.rotateOnAxis (fishaxisx,-0.1);
     } 
     if (event.keyCode ==  40) // down
     {
