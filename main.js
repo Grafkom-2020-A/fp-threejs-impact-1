@@ -312,7 +312,10 @@ function animate() {
     // remove food
     if (food.length > 0){
         for (var i =0; i<food.length; i++){
-            if (food[i].position.y > 0){
+            if (Math.abs(food[i].position.x - fish.position.x) <= 30 && Math.abs(food[i].position.y - fish.position.y) <= 30 && Math.abs(food[i].position.z - fish.position.z) <= 30){
+                removeFood(food[i], i);
+            }
+            else if (food[i].position.y > 370){
                 food[i].position.y -= 1;
             }
             else {
@@ -324,7 +327,7 @@ function animate() {
     // see if its time to spawn food
     if(time>(lastSpawn + spawnRate)){
         lastSpawn=time;
-        //addFood();
+        addFood();
     }
 
     const delta = clock.getDelta();
@@ -347,11 +350,11 @@ function addFood(){
 
         object.position.x = (Math.random() * 1400) + (Math.random() * -1400);  ;  
         object.position.y = 1500;
-        object.position.z = (Math.random() * 800) + (Math.random() * -800);    
-
+        object.position.z = (Math.random() * 800) + (Math.random() * -800);
+        object.scale.set(1.2, 1.2, 1.2);
+        
         scene.add(object);
         food[food.length] = object;
-        food.splice
     } );
 }
 
