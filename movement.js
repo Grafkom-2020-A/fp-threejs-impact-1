@@ -1,4 +1,37 @@
 function ditekan(event) {  
+    //perpindahan AI
+    if (event.keyCode == 49) // 1
+    {
+        fishTemp = fish;
+        fish = fishAI1;
+        fishAI1 = fishTemp;
+        //fish.translateY(-1);
+    }
+
+    if (event.keyCode == 50) // 2
+    {
+        fishTemp = fish;
+        fish = fishAI2;
+        fishAI2 = fishTemp;
+        //fish.translateY(-1);
+    }
+
+    if (event.keyCode == 51) // 3
+    {
+        fishTemp = fish;
+        fish = fishAI3;
+        fishAI3 = fishTemp;
+        //fish.translateY(-1);
+    }
+
+    if (event.keyCode == 52) // 4
+    {
+        fishTemp = fish;
+        fish = fishAI4;
+        fishAI4 = fishTemp;
+        //fish.translateY(-1);
+    }
+
     if (event.keyCode == 70) // F
     {
         lock = !lock;

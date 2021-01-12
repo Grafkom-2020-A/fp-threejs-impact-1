@@ -1,5 +1,9 @@
 
-let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,fishMovementSpeed = 0,lock = false;
+let camera, scene, renderer, stats, time, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
+let food = [], lastSpawn = -1, spawnRate = 6000; //food
+let fish, fishTemp, fishAI1, fishAI2, fishAI3, fishAI4, lastMove = -1, moveRate = 1000, fishMovementSpeed = 0; //fish
+
+//fish movement
 const clock = new THREE.Clock();
 let fishaxisx = new THREE.Vector3(1,0,0);
 let fishaxisy = new THREE.Vector3(0,1,0); 
@@ -48,7 +52,7 @@ function init() {
 
     // model ikan
     const loader = new THREE.FBXLoader();
-    const tLoader = new THREE.TextureLoader()
+    const tLoader = new THREE.TextureLoader();
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
         mixer = new THREE.AnimationMixer( object );
@@ -74,6 +78,100 @@ function init() {
 
     } );
 
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+            }
+
+        } );
+        object.position.y = 800;
+        object.position.x = 500;
+
+        
+        fishAI1 = object;
+        scene.add( fishAI1 );
+
+    } );
+
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.y = 400;
+        object.position.x = -500;
+        
+        fishAI2 = object;
+        scene.add( fishAI2 );
+
+    } );
+
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.y = 1200;
+        object.position.x = -600;
+        
+        fishAI3 = object;
+        scene.add( fishAI3 );
+
+    } );
+
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.y = 500;
+        object.position.x = 1000;
+        
+        fishAI4 = object;
+        scene.add( fishAI4 );
+    } );
+
     // model aquarium
     loader.load( '/FBX/Aquarium-opt.fbx', function ( object ) {
 
@@ -94,7 +192,7 @@ function init() {
         });
 
         // var matAquarium = new THREE.MeshToonMaterial({
-        //     map:  loader.load('/Texture/Pallete.png')
+        //     map:  tLoader.load('/examples/Texture/Pallete.png')
         // });
         // var matGlass = new THREE.MeshBasicMaterial({
         //     color: '#ffffff ',
@@ -114,6 +212,7 @@ function init() {
     
     setupControls();
     setControlsOrbit();
+    //setControlsFirstPerson();
 
 
     window.addEventListener( 'resize', onWindowResize, false );
@@ -136,19 +235,33 @@ function onWindowResize() {
 }
   
 function setupControls() {
+
     cam1 = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
     
     // cam2 = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
     // con1 = new THREE.FirstPersonControls( cam2 , renderer.domElement);
     con1 = new THREE.OrbitControls( cam1 , renderer.domElement);
+    controlsFPS = new THREE.FirstPersonControls(cam1, renderer.domElement); // Handles camera control
 }
 
 function setControlsFirstPerson() {
     // camera = cam1;
-    controls = con1;
+    /*controls = con1;
     camera.position.set( 0, 900, -190 );
-    controls.target.set( 0, 800, 0 );
+    controls.target.set( 0, 800, 0 );*/
     // controls.lookkAt(0,800,0);
+
+	controlsFPS.lookSpeed = LOOKSPEED;
+    controlsFPS.movementSpeed = 20;
+    controlsFPS.noFly = false;
+    controlsFPS.lookVertical = true;
+    controlsFPS.constrainVertical = true;
+    controlsFPS.verticalMin = 1.0;
+    controlsFPS.verticalMax = 2.0;
+    controlsFPS.lon = -150;
+    controlsFPS.lat = 120;
+    
+    camera = cam1;
 }
 
 function setControlsOrbit() {
@@ -173,6 +286,9 @@ function animate() {
     }
     if(fishMovementSpeed < 0) fishMovementSpeed = 0;
 
+    time = Date.now();
+
+    moveAI();
     worldcollider();
 
 
@@ -190,7 +306,6 @@ function animate() {
             }
         }
     }
-    var time = Date.now();
     // see if its time to spawn food
     if(time>(lastSpawn + spawnRate)){
         lastSpawn=time;
@@ -198,6 +313,7 @@ function animate() {
     }
 
     const delta = clock.getDelta();
+    //controlsFPS.update(delta);
     if ( mixer ) mixer.update( delta );
     renderer.render( scene, camera );
     stats.update();
