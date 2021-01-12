@@ -16,8 +16,6 @@ function init() {
     const container = document.createElement( 'div' );
     document.body.appendChild( container );
 
-
-
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 'skyblue' );
     //scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
@@ -38,7 +36,7 @@ function init() {
     scene.add( new THREE.CameraHelper( dirLight.shadow.camera ) );
 
     // ground
-    const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 5000, 5000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+    const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 5000, 5000 ), new THREE.MeshToonMaterial( { color: 0x999999, depthWrite: false } ) );
     mesh.rotation.x = - Math.PI / 2;
     mesh.receiveShadow = true;
     scene.add( mesh );
@@ -51,7 +49,7 @@ function init() {
     // model ikan
     const loader = new THREE.FBXLoader();
     const tLoader = new THREE.TextureLoader()
-    loader.load( 'models/FBX_M/Ikan.fbx', function ( object ) {
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
         mixer = new THREE.AnimationMixer( object );
 
@@ -71,13 +69,13 @@ function init() {
         object.position.y = 800;
 
         
-        fish = object
+        fish = object;
         scene.add( fish );
 
     } );
 
     // model aquarium
-    loader.load( '../FBX/Aquarium-opt.fbx', function ( object ) {
+    loader.load( '/FBX/Aquarium-opt.fbx', function ( object ) {
 
         object.traverse( function ( child ) {
 
@@ -86,7 +84,10 @@ function init() {
                 child.receiveShadow = true;
             }
         } );
-
+        var matAquarium = new THREE.MeshToonMaterial({
+        map:  loader.load('/Texture/Pallete.png')
+        });
+        object.material = matAquarium;
         scene.add( object );
     } );
 
@@ -103,6 +104,26 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
     document.addEventListener('keydown', ditekan);
+
+    //Material
+    var matFish1 = new THREE.MeshToonMaterial({
+        color: '#a40000',
+    });
+    var matFish2 = new THREE.MeshToonMaterial({
+        color: '#ffce88',
+    });
+    var matFishEye = new THREE.MeshToonMaterial({
+        color: '#ffffff',
+    });
+    var matFishPupil = new THREE.MeshToonMaterial({
+        color: '#000000',
+    });
+    
+    var matPlant = new THREE.MeshToonMaterial({
+        color: '#6acfff ',
+    });
+
+
     // stats
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -117,6 +138,7 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
+
 function ditekan(event) {
     
     
@@ -134,26 +156,26 @@ function ditekan(event) {
     }
     if (event.keyCode == 16) // Shift
     {
-        SPEED = 30;
+        SPEED = 15;
         ///fish.translateY(1);
     }
     if (event.keyCode == 17) // Control
     {
-        SPEED = 0;
+        SPEED = 0.1;
         //fish.translateY(-1);
     }
 
     if (event.keyCode ==  87) // W = 87
     {
-        if(SPEED<10)
+        if(SPEED<6)
         SPEED += 1.0;
         // fish.translateZ(10);
     } 
     if (event.keyCode == 83) // S = 83
     {
-        // fish.translateZ(-10);
-        if(SPEED>0)
-        SPEED -= 0.3;
+        //fish.translateZ(-10);
+        //if(SPEED>0)
+        SPEED -= 0.6;
         
     } 
     if (event.keyCode == 65) // A = 65
@@ -182,7 +204,7 @@ function ditekan(event) {
     } 
     if (event.keyCode ==  38) // up 
     {
-        // fish.rotation.x-=0.1;
+        fish.rotation.x-=0.1;
         //fish.rotateOnAxis (fishaxisx,-0.1);
     } 
     if (event.keyCode ==  40) // down
@@ -198,14 +220,16 @@ function ditekan(event) {
     // {
     //     fish.rotation.y+=1;
     // } 
-  }d
+}
+  
 function setupControls() {
-    cam1 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 20000 );
+    cam1 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
     
     // cam2 = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
     // con1 = new THREE.FirstPersonControls( cam2 , renderer.domElement);
     con1 = new THREE.OrbitControls( cam1 , renderer.domElement);
 }
+
 function setControlsFirstPerson() {
     // camera = cam1;
     controls = con1;
@@ -213,6 +237,7 @@ function setControlsFirstPerson() {
     controls.target.set( 0, 800, 0 );
     // controls.lookkAt(0,800,0);
 }
+
 function setControlsOrbit() {
     camera = cam1;
     camera.position.set( 0, 900, -190 );
@@ -220,6 +245,7 @@ function setControlsOrbit() {
     // fish.getWorldPosition(200,800,0);
     controls.target.set( 0, 800, 0 );
 }
+
 function followfish(){
     var relativeCameraOffset = new THREE.Vector3(0,0,-250);
     var cameraOffset = fish.localToWorld (relativeCameraOffset);
@@ -228,6 +254,7 @@ function followfish(){
     camera.lookAt(fish.position);
 
 }
+
 function fishmovement(){
     fish.getWorldPosition(fishloc);
     fish.translateZ(SPEED);
@@ -236,6 +263,7 @@ function fishmovement(){
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
 }
+
 function worldcollider(){
     fish.getWorldPosition(fishloc);
     if(fishloc.getComponent (0)>1550){
@@ -260,9 +288,11 @@ function worldcollider(){
     if(fishloc.getComponent (0)<-1500){
         SPEED = 0;
     }
+
     if(fishloc.getComponent (1)<370){
         SPEED = 0;
     }
+
     if(fishloc.getComponent (2)>830)   {
         SPEED = 0;
     }
@@ -274,6 +304,7 @@ function worldcollider(){
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
 }
+
 function animate() {
 
     requestAnimationFrame( animate );
@@ -283,7 +314,7 @@ function animate() {
         followfish();// camera
     }
     if(SPEED>0){
-        SPEED -=0.05;
+        SPEED -=0.01;
     }
     if(SPEED <0){
         SPEED = 0;
@@ -317,7 +348,7 @@ function animate() {
 
 function addFood(){
     const loader = new THREE.FBXLoader();
-    loader.load( 'models/FBX_M/Fish-Food.fbx', function ( object ) {
+    loader.load( '/FBX/Fish-Food.fbx', function ( object ) {
 
         object.traverse( function (child) {
             if(child.isMesh){
@@ -338,7 +369,6 @@ function addFood(){
 }
 
 function removeFood(foods, idx){
-
     scene.remove(foods);
     food.splice(idx,1);
 }
