@@ -1,5 +1,5 @@
 
-let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,SPEED = 0,lock = false;
+let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,fishMovementSpeed = 0,lock = false;
 const clock = new THREE.Clock();
 let fishaxisx = new THREE.Vector3(1,0,0);
 let fishaxisy = new THREE.Vector3(0,1,0); 
@@ -12,12 +12,11 @@ init();
 animate();
 
 function init() {
-
     const container = document.createElement( 'div' );
     document.body.appendChild( container );
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 'skyblue' );
+    scene.background = new THREE.Color( 'white' );
     //scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
     const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 , 1 ); //0x444444
@@ -85,10 +84,15 @@ function init() {
             }
         } );
         var matAquarium = new THREE.MeshToonMaterial({
-        map:  loader.load('/Texture/Pallete.png')
+            map:  loader.load('/Texture/Pallete.png')
         });
-        object.material = matAquarium;
-        scene.add( object );
+        var matGlass = new THREE.MeshBasicMaterial({
+            color: '#ffffff ',
+         });
+         let material = [matAquarium, matGlass];
+         object.material = matGlass;
+         var aquarium = object;
+        scene.add( aquarium );
     } );
 
 
@@ -105,25 +109,6 @@ function init() {
     window.addEventListener( 'resize', onWindowResize, false );
     document.addEventListener('keydown', ditekan);
 
-    //Material
-    var matFish1 = new THREE.MeshToonMaterial({
-        color: '#a40000',
-    });
-    var matFish2 = new THREE.MeshToonMaterial({
-        color: '#ffce88',
-    });
-    var matFishEye = new THREE.MeshToonMaterial({
-        color: '#ffffff',
-    });
-    var matFishPupil = new THREE.MeshToonMaterial({
-        color: '#000000',
-    });
-    
-    var matPlant = new THREE.MeshToonMaterial({
-        color: '#6acfff ',
-    });
-
-
     // stats
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -139,9 +124,7 @@ function onWindowResize() {
 
 }
 
-function ditekan(event) {
-    
-    
+function ditekan(event) {  
     if (event.keyCode == 70) // F
     {
         lock = !lock;
@@ -156,27 +139,26 @@ function ditekan(event) {
     }
     if (event.keyCode == 16) // Shift
     {
-        SPEED = 15;
+        fishMovementSpeed = 6;
         ///fish.translateY(1);
     }
-    if (event.keyCode == 17) // Control
+    if (event.keyCode == 32) // Space
     {
-        SPEED = 0.1;
+        fishMovementSpeed = 0.1;
         //fish.translateY(-1);
     }
 
     if (event.keyCode ==  87) // W = 87
     {
-        if(SPEED<6)
-        SPEED += 1.0;
+        if(fishMovementSpeed<6)
+            fishMovementSpeed += 1.0;
         // fish.translateZ(10);
     } 
     if (event.keyCode == 83) // S = 83
     {
         //fish.translateZ(-10);
-        //if(SPEED>0)
-        SPEED -= 0.6;
-        
+        if(fishMovementSpeed>0)
+            fishMovementSpeed -= 0.6;
     } 
     if (event.keyCode == 65) // A = 65
     {
@@ -195,7 +177,7 @@ function ditekan(event) {
     if (event.keyCode == 39) // right
     {
         // fish.rotation.z-=0.1;
-        //fish.rotateOnAxis (fishaxisz,0.1);
+        fish.rotateOnAxis (fishaxisz,0.1);
     } 
     if (event.keyCode == 37) // left
     {
@@ -204,26 +186,18 @@ function ditekan(event) {
     } 
     if (event.keyCode ==  38) // up 
     {
-        fish.rotation.x-=0.1;
-        //fish.rotateOnAxis (fishaxisx,-0.1);
+        //fish.rotation.x-=0.1;
+        fish.rotateOnAxis (fishaxisx,-0.1);
     } 
     if (event.keyCode ==  40) // down
     {
         // fish.rotation.x+=0.1;
         fish.rotateOnAxis (fishaxisx,0.1);
     } 
-    // if (event.keyCode ==  69) // E 
-    // {
-    //     fish.rotation.y-=1;
-    // } 
-    // if (event.keyCode ==  81) // Q
-    // {
-    //     fish.rotation.y+=1;
-    // } 
 }
   
 function setupControls() {
-    cam1 = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+    cam1 = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
     
     // cam2 = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
     // con1 = new THREE.FirstPersonControls( cam2 , renderer.domElement);
@@ -252,12 +226,11 @@ function followfish(){
     // camera.position.copy (cameraOffset);
     camera.position.lerp(cameraOffset, 0.2);
     camera.lookAt(fish.position);
-
 }
 
 function fishmovement(){
     fish.getWorldPosition(fishloc);
-    fish.translateZ(SPEED);
+    fish.translateZ(fishMovementSpeed);
     fish.getWorldPosition(fishlocafter);
     fishlocafter.sub(fishloc);
     camera.position.add(fishlocafter);
@@ -266,38 +239,43 @@ function fishmovement(){
 
 function worldcollider(){
     fish.getWorldPosition(fishloc);
+
+    if(fish.position.y <= 1000)
+        fish.position.y = 1000;
+
+
     if(fishloc.getComponent (0)>1550){
-        fish.position.x-=SPEED+10;
+        fish.position.x-=fishMovementSpeed+10;
     }
     if(fishloc.getComponent (0)<-1550){
-        fish.position.x+=SPEED+10;
+        fish.position.x+=fishMovementSpeed+10;
     }
     if(fishloc.getComponent (1)<350){
-        fish.position.y+=SPEED+10;
+        fish.position.y+=fishMovementSpeed+10;
     }
     if(fishloc.getComponent (2)>850)   {
-        fish.position.z-=SPEED+10;
+        fish.position.z-=fishMovementSpeed+10;
     }
     if(fishloc.getComponent (2)<-850){
-        fish.position.z+=SPEED+10;
+        fish.position.z+=fishMovementSpeed+10;
     }
     
     if(fishloc.getComponent (0)>1500){
-        SPEED = 0;
+        fishMovementSpeed = 0;
     }
     if(fishloc.getComponent (0)<-1500){
-        SPEED = 0;
+        fishMovementSpeed = 0;
     }
 
     if(fishloc.getComponent (1)<370){
-        SPEED = 0;
+        fishMovementSpeed = 0;
     }
 
     if(fishloc.getComponent (2)>830)   {
-        SPEED = 0;
+        fishMovementSpeed = 0;
     }
     if(fishloc.getComponent (2)<-850){
-        SPEED = 0;
+        fishMovementSpeed = 0;
     }
     fish.getWorldPosition(fishlocafter);
     fishlocafter.sub(fishloc);
@@ -313,12 +291,13 @@ function animate() {
     if(lock){
         followfish();// camera
     }
-    if(SPEED>0){
-        SPEED -=0.01;
+    if(fishMovementSpeed>0){
+        fishMovementSpeed -=0.01;
     }
-    if(SPEED <0){
-        SPEED = 0;
+    if(fishMovementSpeed <0){
+        fishMovementSpeed += 0.01;
     }
+
     worldcollider();
 
 
@@ -337,7 +316,7 @@ function animate() {
     // see if its time to spawn food
     if(time>(lastSpawn + spawnRate)){
         lastSpawn=time;
-        addFood();
+        //addFood();
     }
 
     const delta = clock.getDelta();
