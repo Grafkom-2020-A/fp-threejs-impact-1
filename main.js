@@ -7,6 +7,7 @@ let fishaxisz = new THREE.Vector3(0,0,1);
 let mixer;
 let fishloc= new THREE.Vector3();
 let fishlocafter= new THREE.Vector3();
+var keyPressed = false;
 
 init();
 animate();
@@ -108,6 +109,7 @@ function init() {
 
     window.addEventListener( 'resize', onWindowResize, false );
     document.addEventListener('keydown', ditekan);
+    document.addEventListener('keyup', dilepas);
 
     // stats
     stats = new Stats();
@@ -124,6 +126,7 @@ function onWindowResize() {
 
 }
 
+
 function ditekan(event) {  
     if (event.keyCode == 70) // F
     {
@@ -139,7 +142,7 @@ function ditekan(event) {
     }
     if (event.keyCode == 16) // Shift
     {
-        fishMovementSpeed = 6;
+        fishMovementSpeed = 15;
         ///fish.translateY(1);
     }
     if (event.keyCode == 32) // Space
@@ -150,8 +153,9 @@ function ditekan(event) {
 
     if (event.keyCode ==  87) // W = 87
     {
-        if(fishMovementSpeed<6)
-            fishMovementSpeed += 1.0;
+        keyPressed = true;
+        if(fishMovementSpeed<9)
+            fishMovementSpeed += 1.5;
         // fish.translateZ(10);
     } 
     if (event.keyCode == 83) // S = 83
@@ -195,6 +199,13 @@ function ditekan(event) {
         fish.rotateOnAxis (fishaxisx,0.1);
     } 
 }
+
+function dilepas(event){
+    if (event.keyCode ==  87) // W = 87
+    {
+        keyPressed = false;
+    } 
+}
   
 function setupControls() {
     cam1 = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
@@ -221,10 +232,17 @@ function setControlsOrbit() {
 }
 
 function followfish(){
-    var relativeCameraOffset = new THREE.Vector3(0,0,-250);
+    var relativeCameraOffset = new THREE.Vector3(0,100,-250);
     var cameraOffset = fish.localToWorld (relativeCameraOffset);
     // camera.position.copy (cameraOffset);
     camera.position.lerp(cameraOffset, 0.2);
+    if (camera.position.x > 1500) camera.position.x = 1500;
+    if (camera.position.x < -1500) camera.position.x = -1500;
+    if (camera.position.y > 1450) camera.position.y = 1450;
+    if (camera.position.y < 370) camera.position.y = 370;
+    if (camera.position.z > 850) camera.position.z = 850;
+    if (camera.position.z < -850) camera.position.z = -850;
+    
     camera.lookAt(fish.position);
 }
 
@@ -240,42 +258,33 @@ function fishmovement(){
 function worldcollider(){
     fish.getWorldPosition(fishloc);
 
-    if(fish.position.y <= 1000)
-        fish.position.y = 1000;
+    // if(fish.position.y <= 300)
+    //     fish.position.y = 300;
 
-
-    if(fishloc.getComponent (0)>1550){
-        fish.position.x-=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (0)<-1550){
-        fish.position.x+=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (1)<350){
-        fish.position.y+=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (2)>850)   {
-        fish.position.z-=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (2)<-850){
-        fish.position.z+=fishMovementSpeed+10;
-    }
-    
+    //Collider Aquarium
     if(fishloc.getComponent (0)>1500){
         fishMovementSpeed = 0;
+        fish.position.x-=fishMovementSpeed+10;
     }
     if(fishloc.getComponent (0)<-1500){
         fishMovementSpeed = 0;
+        fish.position.x+=fishMovementSpeed+10;
     }
-
-    if(fishloc.getComponent (1)<370){
+    if(fishloc.getComponent (1)> 1450){
         fishMovementSpeed = 0;
+        fish.position.y-=fishMovementSpeed+10;
     }
-
+    if(fishloc.getComponent (1)< 370){
+        fishMovementSpeed = 0;
+        fish.position.y+=fishMovementSpeed+10;
+    }
     if(fishloc.getComponent (2)>830)   {
         fishMovementSpeed = 0;
+        fish.position.z-=fishMovementSpeed+10;
     }
     if(fishloc.getComponent (2)<-850){
         fishMovementSpeed = 0;
+        fish.position.z+=fishMovementSpeed+10;
     }
     fish.getWorldPosition(fishlocafter);
     fishlocafter.sub(fishloc);
@@ -291,12 +300,11 @@ function animate() {
     if(lock){
         followfish();// camera
     }
-    if(fishMovementSpeed>0){
-        fishMovementSpeed -=0.01;
+    if(keyPressed == false && fishMovementSpeed > 0){
+        console.log(keyPressed);
+        fishMovementSpeed -= 0.1;
     }
-    if(fishMovementSpeed <0){
-        fishMovementSpeed += 0.01;
-    }
+    if(fishMovementSpeed < 0) fishMovementSpeed = 0;
 
     worldcollider();
 
