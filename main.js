@@ -1,5 +1,9 @@
 
-let camera, scene, renderer, stats, lastSpawn = -1, spawnRate = 6000, food = [],fish, controls,bool_controls=true,cam1,cam2,con1,con2,fishMovementSpeed = 0,lock = false;
+let camera, scene, renderer, stats, time, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
+let food = [], lastSpawn = -1, spawnRate = 6000; //food
+let fish, fishTemp, fishAI1, fishAI2, fishAI3, fishAI4, lastMove = -1, moveRate = 1000, fishMovementSpeed = 0; //fish
+
+//fish movement
 const clock = new THREE.Clock();
 let fishaxisx = new THREE.Vector3(1,0,0);
 let fishaxisy = new THREE.Vector3(0,1,0); 
@@ -7,6 +11,7 @@ let fishaxisz = new THREE.Vector3(0,0,1);
 let mixer;
 let fishloc= new THREE.Vector3();
 let fishlocafter= new THREE.Vector3();
+var keyPressed = false;
 
 init();
 animate();
@@ -47,7 +52,7 @@ function init() {
 
     // model ikan
     const loader = new THREE.FBXLoader();
-    const tLoader = new THREE.TextureLoader()
+    const tLoader = new THREE.TextureLoader();
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
         mixer = new THREE.AnimationMixer( object );
@@ -73,6 +78,100 @@ function init() {
 
     } );
 
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+            }
+
+        } );
+        object.position.y = 800;
+        object.position.x = 500;
+
+        
+        fishAI1 = object;
+        scene.add( fishAI1 );
+
+    } );
+
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.y = 400;
+        object.position.x = -500;
+        
+        fishAI2 = object;
+        scene.add( fishAI2 );
+
+    } );
+
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.y = 1200;
+        object.position.x = -600;
+        
+        fishAI3 = object;
+        scene.add( fishAI3 );
+
+    } );
+
+    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+
+        mixer = new THREE.AnimationMixer( object );
+
+        const action = mixer.clipAction( object.animations[0] );
+        action.play();
+
+        object.traverse( function ( child ) {
+
+            if ( child.isMesh ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        } );
+        object.position.y = 500;
+        object.position.x = 1000;
+        
+        fishAI4 = object;
+        scene.add( fishAI4 );
+    } );
+
     // model aquarium
     loader.load( '/FBX/Aquarium-opt.fbx', function ( object ) {
 
@@ -83,14 +182,23 @@ function init() {
                 child.receiveShadow = true;
             }
         } );
-        var matAquarium = new THREE.MeshToonMaterial({
-            map:  loader.load('/Texture/Pallete.png')
+
+        tLoader.load('/Texture/Pallete.png', function(texture){
+            object.traverse( function ( child ) {
+                if ( child.isMesh ){
+                    child.material.map = texture;
+                }
+            } );
         });
-        var matGlass = new THREE.MeshBasicMaterial({
-            color: '#ffffff ',
-         });
-         let material = [matAquarium, matGlass];
-         object.material = matGlass;
+
+        // var matAquarium = new THREE.MeshToonMaterial({
+        //     map:  tLoader.load('/examples/Texture/Pallete.png')
+        // });
+        // var matGlass = new THREE.MeshBasicMaterial({
+        //     color: '#ffffff ',
+        //  });
+        //  let material = [matAquarium, matGlass];
+        //  object.material = matGlass;
          var aquarium = object;
         scene.add( aquarium );
     } );
@@ -104,10 +212,12 @@ function init() {
     
     setupControls();
     setControlsOrbit();
+    //setControlsFirstPerson();
 
 
     window.addEventListener( 'resize', onWindowResize, false );
     document.addEventListener('keydown', ditekan);
+    document.addEventListener('keyup', dilepas);
 
     // stats
     stats = new Stats();
@@ -123,93 +233,35 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
-
-function ditekan(event) {  
-    if (event.keyCode == 70) // F
-    {
-        lock = !lock;
-        // camera.add(fishloc);
-        // fish.lookAt(camera.position);
-        // bool_controls = !bool_controls;
-        // if(bool_controls){
-        //     setControlsOrbit();
-        // }else{
-        //     setControlsFirstPerson();
-        // }
-    }
-    if (event.keyCode == 16) // Shift
-    {
-        fishMovementSpeed = 6;
-        ///fish.translateY(1);
-    }
-    if (event.keyCode == 32) // Space
-    {
-        fishMovementSpeed = 0.1;
-        //fish.translateY(-1);
-    }
-
-    if (event.keyCode ==  87) // W = 87
-    {
-        if(fishMovementSpeed<6)
-            fishMovementSpeed += 1.0;
-        // fish.translateZ(10);
-    } 
-    if (event.keyCode == 83) // S = 83
-    {
-        //fish.translateZ(-10);
-        if(fishMovementSpeed>0)
-            fishMovementSpeed -= 0.6;
-    } 
-    if (event.keyCode == 65) // A = 65
-    {
-        
-        // fish.rotation.y+=0.31;
-        fish.rotateOnAxis (fishaxisy,0.11,0.2);
-        // fish.rotation.y+=0.31;
-    } 
-    if (event.keyCode == 68) // D = 68
-    {
-        // fish.rotation.y-=0.31;
-        fish.rotateOnAxis (fishaxisy,-0.11,0.2);
-        // fish.rotation.y-=0.31;
-    } 
-
-    if (event.keyCode == 39) // right
-    {
-        // fish.rotation.z-=0.1;
-        fish.rotateOnAxis (fishaxisz,0.1);
-    } 
-    if (event.keyCode == 37) // left
-    {
-        // fish.rotation.z+=0.1;
-        fish.rotateOnAxis (fishaxisz,-0.1);
-    } 
-    if (event.keyCode ==  38) // up 
-    {
-        //fish.rotation.x-=0.1;
-        fish.rotateOnAxis (fishaxisx,-0.1);
-    } 
-    if (event.keyCode ==  40) // down
-    {
-        // fish.rotation.x+=0.1;
-        fish.rotateOnAxis (fishaxisx,0.1);
-    } 
-}
   
 function setupControls() {
+
     cam1 = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
     
     // cam2 = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
     // con1 = new THREE.FirstPersonControls( cam2 , renderer.domElement);
     con1 = new THREE.OrbitControls( cam1 , renderer.domElement);
+    controlsFPS = new THREE.FirstPersonControls(cam1, renderer.domElement); // Handles camera control
 }
 
 function setControlsFirstPerson() {
     // camera = cam1;
-    controls = con1;
+    /*controls = con1;
     camera.position.set( 0, 900, -190 );
-    controls.target.set( 0, 800, 0 );
+    controls.target.set( 0, 800, 0 );*/
     // controls.lookkAt(0,800,0);
+
+	controlsFPS.lookSpeed = LOOKSPEED;
+    controlsFPS.movementSpeed = 20;
+    controlsFPS.noFly = false;
+    controlsFPS.lookVertical = true;
+    controlsFPS.constrainVertical = true;
+    controlsFPS.verticalMin = 1.0;
+    controlsFPS.verticalMax = 2.0;
+    controlsFPS.lon = -150;
+    controlsFPS.lat = 120;
+    
+    camera = cam1;
 }
 
 function setControlsOrbit() {
@@ -220,69 +272,6 @@ function setControlsOrbit() {
     controls.target.set( 0, 800, 0 );
 }
 
-function followfish(){
-    var relativeCameraOffset = new THREE.Vector3(0,0,-250);
-    var cameraOffset = fish.localToWorld (relativeCameraOffset);
-    // camera.position.copy (cameraOffset);
-    camera.position.lerp(cameraOffset, 0.2);
-    camera.lookAt(fish.position);
-}
-
-function fishmovement(){
-    fish.getWorldPosition(fishloc);
-    fish.translateZ(fishMovementSpeed);
-    fish.getWorldPosition(fishlocafter);
-    fishlocafter.sub(fishloc);
-    camera.position.add(fishlocafter);
-    camera.lookAt(fish.position);
-}
-
-function worldcollider(){
-    fish.getWorldPosition(fishloc);
-
-    if(fish.position.y <= 1000)
-        fish.position.y = 1000;
-
-
-    if(fishloc.getComponent (0)>1550){
-        fish.position.x-=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (0)<-1550){
-        fish.position.x+=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (1)<350){
-        fish.position.y+=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (2)>850)   {
-        fish.position.z-=fishMovementSpeed+10;
-    }
-    if(fishloc.getComponent (2)<-850){
-        fish.position.z+=fishMovementSpeed+10;
-    }
-    
-    if(fishloc.getComponent (0)>1500){
-        fishMovementSpeed = 0;
-    }
-    if(fishloc.getComponent (0)<-1500){
-        fishMovementSpeed = 0;
-    }
-
-    if(fishloc.getComponent (1)<370){
-        fishMovementSpeed = 0;
-    }
-
-    if(fishloc.getComponent (2)>830)   {
-        fishMovementSpeed = 0;
-    }
-    if(fishloc.getComponent (2)<-850){
-        fishMovementSpeed = 0;
-    }
-    fish.getWorldPosition(fishlocafter);
-    fishlocafter.sub(fishloc);
-    camera.position.add(fishlocafter);
-    camera.lookAt(fish.position);
-}
-
 function animate() {
 
     requestAnimationFrame( animate );
@@ -291,20 +280,25 @@ function animate() {
     if(lock){
         followfish();// camera
     }
-    if(fishMovementSpeed>0){
-        fishMovementSpeed -=0.01;
+    if(keyPressed == false && fishMovementSpeed > 0){
+        console.log(keyPressed);
+        fishMovementSpeed -= 0.1;
     }
-    if(fishMovementSpeed <0){
-        fishMovementSpeed += 0.01;
-    }
+    if(fishMovementSpeed < 0) fishMovementSpeed = 0;
 
+    time = Date.now();
+
+    moveAI();
     worldcollider();
 
 
     // remove food
     if (food.length > 0){
         for (var i =0; i<food.length; i++){
-            if (food[i].position.y > 0){
+            if (Math.abs(food[i].position.x - fish.position.x) <= 30 && Math.abs(food[i].position.y - fish.position.y) <= 30 && Math.abs(food[i].position.z - fish.position.z) <= 30){
+                removeFood(food[i], i);
+            }
+            else if (food[i].position.y > 370){
                 food[i].position.y -= 1;
             }
             else {
@@ -312,42 +306,15 @@ function animate() {
             }
         }
     }
-    var time = Date.now();
     // see if its time to spawn food
     if(time>(lastSpawn + spawnRate)){
         lastSpawn=time;
-        //addFood();
+        addFood();
     }
 
     const delta = clock.getDelta();
+    //controlsFPS.update(delta);
     if ( mixer ) mixer.update( delta );
     renderer.render( scene, camera );
     stats.update();
-}
-
-function addFood(){
-    const loader = new THREE.FBXLoader();
-    loader.load( '/FBX/Fish-Food.fbx', function ( object ) {
-
-        object.traverse( function (child) {
-            if(child.isMesh){
-                child.material.map = null;
-                child.castShadow = true;
-                child.receiveShadow = false;
-            }
-        } );
-
-        object.position.x = (Math.random() * 1400) + (Math.random() * -1400);  ;  
-        object.position.y = 1500;
-        object.position.z = (Math.random() * 800) + (Math.random() * -800);    
-
-        scene.add(object);
-        food[food.length] = object;
-        food.splice
-    } );
-}
-
-function removeFood(foods, idx){
-    scene.remove(foods);
-    food.splice(idx,1);
 }
