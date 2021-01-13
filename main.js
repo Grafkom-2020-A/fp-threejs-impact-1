@@ -8,7 +8,7 @@ const clock = new THREE.Clock();
 let fishaxisx = new THREE.Vector3(1,0,0);
 let fishaxisy = new THREE.Vector3(0,1,0); 
 let fishaxisz = new THREE.Vector3(0,0,1); 
-let mixer;
+let mixer0, mixer1, mixer2,mixer3,mixer4;
 let fishloc= new THREE.Vector3();
 let fishlocafter= new THREE.Vector3();
 var keyPressed = false;
@@ -55,23 +55,18 @@ function init() {
     const tLoader = new THREE.TextureLoader();
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
-        mixer = new THREE.AnimationMixer( object );
+        mixer0 = new THREE.AnimationMixer( object );
 
-        const action = mixer.clipAction( object.animations[0] );
+        const action = mixer0.clipAction( object.animations[0] );
         action.play();
 
         object.traverse( function ( child ) {
-
             if ( child.isMesh ) {
-
                 child.castShadow = true;
                 child.receiveShadow = true;
-
             }
-
         } );
         object.position.y = 800;
-
         
         fish = object;
         scene.add( fish );
@@ -80,9 +75,9 @@ function init() {
 
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
-        mixer = new THREE.AnimationMixer( object );
+        mixer1 = new THREE.AnimationMixer( object );
 
-        const action = mixer.clipAction( object.animations[0] );
+        const action = mixer1.clipAction( object.animations[0] );
         action.play();
 
         object.traverse( function ( child ) {
@@ -106,9 +101,9 @@ function init() {
 
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
-        mixer = new THREE.AnimationMixer( object );
+        mixer2 = new THREE.AnimationMixer( object );
 
-        const action = mixer.clipAction( object.animations[0] );
+        const action = mixer2.clipAction( object.animations[0] );
         action.play();
 
         object.traverse( function ( child ) {
@@ -129,9 +124,9 @@ function init() {
 
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
-        mixer = new THREE.AnimationMixer( object );
+        mixer3 = new THREE.AnimationMixer( object );
 
-        const action = mixer.clipAction( object.animations[0] );
+        const action = mixer3.clipAction( object.animations[0] );
         action.play();
 
         object.traverse( function ( child ) {
@@ -152,9 +147,9 @@ function init() {
 
     loader.load( '/FBX/Ikan.fbx', function ( object ) {
 
-        mixer = new THREE.AnimationMixer( object );
+        mixer4 = new THREE.AnimationMixer( object );
 
-        const action = mixer.clipAction( object.animations[0] );
+        const action = mixer4.clipAction( object.animations[0] );
         action.play();
 
         object.traverse( function ( child ) {
@@ -314,7 +309,17 @@ function animate() {
 
     const delta = clock.getDelta();
     //controlsFPS.update(delta);
-    if ( mixer ) mixer.update( delta );
+    if ( mixer0 ) 
+        mixer0.update( delta );
+    if ( mixer1 ) 
+        mixer1.update( delta );
+    if ( mixer2 ) 
+        mixer2.update( delta );
+    if ( mixer3 ) 
+        mixer3.update( delta );
+    if ( mixer4 ) 
+        mixer4.update( delta );
+    
     renderer.render( scene, camera );
     stats.update();
 }
