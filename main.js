@@ -11,6 +11,7 @@ let fishaxisz = new THREE.Vector3(0,0,1);
 let mixer;
 let fishloc= new THREE.Vector3();
 let fishlocafter= new THREE.Vector3();
+let vec = new THREE.Vector3();
 var keyPressed = false;
 
 init();

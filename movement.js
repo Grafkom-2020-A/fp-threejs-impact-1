@@ -133,6 +133,9 @@ function fishmovement(){
     fishlocafter.sub(fishloc);
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
+
+    fish.getWorldPosition(vec);
+    controls.target = vec;
 }
 
 function worldcollider(){
@@ -170,4 +173,5 @@ function worldcollider(){
     fishlocafter.sub(fishloc);
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
+    
 }
