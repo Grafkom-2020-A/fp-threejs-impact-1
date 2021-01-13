@@ -117,13 +117,13 @@ function loadingmodel(){
 function animateFish() {
     const delta = clock.getDelta();
     if ( mixer0 ) 
-        mixer0.update( delta );
+        mixer0.update( delta * (fishMovementSpeed+2)/4);
     if ( mixer1 ) 
-        mixer1.update( delta );
+        mixer1.update( delta * (fishMovementSpeed+2)/4);
     if ( mixer2 ) 
-        mixer2.update( delta );
+        mixer2.update( delta * (fishMovementSpeed+2)/4);
     if ( mixer3 ) 
-        mixer3.update( delta );
+        mixer3.update( delta * (fishMovementSpeed+2)/4);
     if ( mixer4 ) 
-        mixer4.update( delta );
+        mixer4.update( delta * (fishMovementSpeed+2)/4);
 }

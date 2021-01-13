@@ -7,7 +7,6 @@ function ditekan(event) {
         fishTemp = fish;
         fish = fishAI1;
         fishAI1 = fishTemp;
-        //fish.translateY(-1);
     }
 
     if (event.keyCode == 50) // 2
@@ -15,7 +14,6 @@ function ditekan(event) {
         fishTemp = fish;
         fish = fishAI2;
         fishAI2 = fishTemp;
-        //fish.translateY(-1);
     }
 
     if (event.keyCode == 51) // 3
@@ -23,7 +21,6 @@ function ditekan(event) {
         fishTemp = fish;
         fish = fishAI3;
         fishAI3 = fishTemp;
-        //fish.translateY(-1);
     }
 
     if (event.keyCode == 52) // 4
@@ -31,30 +28,19 @@ function ditekan(event) {
         fishTemp = fish;
         fish = fishAI4;
         fishAI4 = fishTemp;
-        //fish.translateY(-1);
     }
 
     if (event.keyCode == 70) // F
     {
         lock = !lock;
-        // camera.add(fishloc);
-        // fish.lookAt(camera.position);
-        // bool_controls = !bool_controls;
-        // if(bool_controls){
-        //     setControlsOrbit();
-        // }else{
-        //     setControlsFirstPerson();
-        // }
     }
     if (event.keyCode == 16) // Shift
     {
         fishMovementSpeed = 4;
-        ///fish.translateY(1);
     }
     if (event.keyCode == 32) // Space
     {
         fishMovementSpeed = 0.1;
-        //fish.translateY(-1);
     }
 
     if (event.keyCode ==  87) // W = 87
@@ -158,10 +144,12 @@ function worldcollider(){
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
     
-    if (camera.position.x > 1500) camera.position.x = 1500;
-    if (camera.position.x < -1500) camera.position.x = -1500;
-    if (camera.position.y > 1450) camera.position.y = 1450;
-    if (camera.position.y < 370) camera.position.y = 370;
-    if (camera.position.z > 850) camera.position.z = 850;
-    if (camera.position.z < -850) camera.position.z = -850;
+    if(lock){
+        if (camera.position.x > 1500) camera.position.x = 1500;
+        if (camera.position.x < -1500) camera.position.x = -1500;
+        if (camera.position.y > 1450) camera.position.y = 1450;
+        if (camera.position.y < 370) camera.position.y = 370;
+        if (camera.position.z > 850) camera.position.z = 850;
+        if (camera.position.z < -850) camera.position.z = -850;
+    }
 }

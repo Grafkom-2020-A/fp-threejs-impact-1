@@ -1,5 +1,5 @@
 
-let camera, scene, renderer, stats, time, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
+let camera, scene, renderer, stats, timeIs, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
 let food = [], lastSpawn = -1, spawnRate = 6000; //food
 let fish, fishTemp, fishAI1, fishAI2, fishAI3, fishAI4, lastMove = -1, moveRate = 1000, fishMovementSpeed = 0; //fish
 
@@ -69,6 +69,9 @@ function init() {
     document.addEventListener('keydown', ditekan);
     document.addEventListener('keyup', dilepas);
 
+    PlayMusicBackground();
+    PlayAquariumBackground()
+
     // stats
     stats = new Stats();
     container.appendChild( stats.dom );
@@ -132,12 +135,12 @@ function animate() {
         followfish();// camera
     }
     if(keyPressed == false && fishMovementSpeed > 0.2)
-        fishMovementSpeed -= 0.01;
+        fishMovementSpeed -= 0.05;
     
     if(fishMovementSpeed <= 0) 
         fishMovementSpeed = 0.2;
 
-    time = Date.now();
+    timeIs = Date.now();
 
     moveAI();
     worldcollider();
@@ -147,7 +150,9 @@ function animate() {
     if (food.length > 0){
         for (var i =0; i<food.length; i++){
             if (Math.abs(food[i].position.x - fish.position.x) <= 30 && Math.abs(food[i].position.y - fish.position.y) <= 30 && Math.abs(food[i].position.z - fish.position.z) <= 30){
+                //Fish Eat Food
                 removeFood(food[i], i);
+                PlayEatSound();
             }
             else if (food[i].position.y > 370){
                 food[i].position.y -= 1;
@@ -158,8 +163,8 @@ function animate() {
         }
     }
     // see if its time to spawn food
-    if(time>(lastSpawn + spawnRate)){
-        lastSpawn=time;
+    if(timeIs > (lastSpawn + spawnRate)){
+        lastSpawn = timeIs;
         addFood();
     }
 
@@ -167,3 +172,46 @@ function animate() {
     renderer.render( scene, camera );
     stats.update();
 }
+
+function PlayMusicBackground(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    const sound = new THREE.Audio( listener );
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '/Music/Music Background.mp3', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setLoop( true );
+        sound.setVolume( 0.3 );
+        sound.play();
+    });
+};
+
+function PlayAquariumBackground(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    const sound = new THREE.Audio( listener );
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '/Music/Aquarium background.mp3', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setLoop( true );
+        sound.setVolume( 1.0 );
+        sound.play();
+    });
+
+};
+
+function PlayEatSound(){
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    const sound = new THREE.Audio( listener );
+    const audioLoader = new THREE.AudioLoader();
+    audioLoader.load( '/Music/Eat Audio.mp3', function( buffer ) {
+        sound.setBuffer( buffer );
+        sound.setLoop( false );
+        sound.setVolume( 0.8 );
+        sound.play();
+    });
+};

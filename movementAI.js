@@ -1,6 +1,6 @@
 function moveAI(){
-    if(time>(lastMove + moveRate)){
-        lastMove=time;
+    if(timeIs >(lastMove + moveRate)){
+        lastMove=timeIs;
         let move1 = false, move2 = false, move3 = false, move4 = false;
         let randX1 = Math.random();
         let randY1 = Math.random();
@@ -19,7 +19,7 @@ function moveAI(){
     moveAIworldcolider(fishAI2);
     moveAIworldcolider(fishAI3);
     moveAIworldcolider(fishAI4);
-    
+
 }
 function moveAIsub(randX,randY,move,fishAI){
     if(randX <= 0.25 && move == false) {
