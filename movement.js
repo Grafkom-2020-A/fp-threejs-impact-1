@@ -116,13 +116,6 @@ function followfish(){
     var cameraOffset = fish.localToWorld (relativeCameraOffset);
     // camera.position.copy (cameraOffset);
     camera.position.lerp(cameraOffset, 0.2);
-    if (camera.position.x > 1500) camera.position.x = 1500;
-    if (camera.position.x < -1500) camera.position.x = -1500;
-    if (camera.position.y > 1450) camera.position.y = 1450;
-    if (camera.position.y < 370) camera.position.y = 370;
-    if (camera.position.z > 850) camera.position.z = 850;
-    if (camera.position.z < -850) camera.position.z = -850;
-    
     camera.lookAt(fish.position);
 }
 
@@ -170,4 +163,11 @@ function worldcollider(){
     fishlocafter.sub(fishloc);
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
+    
+    if (camera.position.x > 1500) camera.position.x = 1500;
+    if (camera.position.x < -1500) camera.position.x = -1500;
+    if (camera.position.y > 1450) camera.position.y = 1450;
+    if (camera.position.y < 370) camera.position.y = 370;
+    if (camera.position.z > 850) camera.position.z = 850;
+    if (camera.position.z < -850) camera.position.z = -850;
 }
