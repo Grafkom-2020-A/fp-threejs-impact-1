@@ -131,11 +131,11 @@ function animate() {
     if(lock){
         followfish();// camera
     }
-    if(keyPressed == false && fishMovementSpeed > 0){
-        console.log(keyPressed);
-        fishMovementSpeed -= 0.1;
-    }
-    if(fishMovementSpeed < 0) fishMovementSpeed = 0;
+    if(keyPressed == false && fishMovementSpeed > 0.2)
+        fishMovementSpeed -= 0.01;
+    
+    if(fishMovementSpeed <= 0) 
+        fishMovementSpeed = 0.2;
 
     time = Date.now();
 
