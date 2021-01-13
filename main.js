@@ -8,9 +8,9 @@ const clock = new THREE.Clock();
 let fishaxisx = new THREE.Vector3(1,0,0);
 let fishaxisy = new THREE.Vector3(0,1,0); 
 let fishaxisz = new THREE.Vector3(0,0,1); 
-let mixer0, mixer1, mixer2,mixer3,mixer4;
 let fishloc= new THREE.Vector3();
 let fishlocafter= new THREE.Vector3();
+let vec = new THREE.Vector3();
 var keyPressed = false;
 
 init();
@@ -51,152 +51,7 @@ function init() {
     scene.add( grid );
 
     // model ikan
-    const loader = new THREE.FBXLoader();
-    const tLoader = new THREE.TextureLoader();
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
-
-        mixer0 = new THREE.AnimationMixer( object );
-
-        const action = mixer0.clipAction( object.animations[0] );
-        action.play();
-
-        object.traverse( function ( child ) {
-            if ( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        } );
-        object.position.y = 800;
-        
-        fish = object;
-        scene.add( fish );
-
-    } );
-
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
-
-        mixer1 = new THREE.AnimationMixer( object );
-
-        const action = mixer1.clipAction( object.animations[0] );
-        action.play();
-
-        object.traverse( function ( child ) {
-
-            if ( child.isMesh ) {
-
-                child.castShadow = true;
-                child.receiveShadow = true;
-
-            }
-
-        } );
-        object.position.y = 800;
-        object.position.x = 500;
-
-        
-        fishAI1 = object;
-        scene.add( fishAI1 );
-
-    } );
-
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
-
-        mixer2 = new THREE.AnimationMixer( object );
-
-        const action = mixer2.clipAction( object.animations[0] );
-        action.play();
-
-        object.traverse( function ( child ) {
-
-            if ( child.isMesh ) {
-
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        } );
-        object.position.y = 400;
-        object.position.x = -500;
-        
-        fishAI2 = object;
-        scene.add( fishAI2 );
-
-    } );
-
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
-
-        mixer3 = new THREE.AnimationMixer( object );
-
-        const action = mixer3.clipAction( object.animations[0] );
-        action.play();
-
-        object.traverse( function ( child ) {
-
-            if ( child.isMesh ) {
-
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        } );
-        object.position.y = 1200;
-        object.position.x = -600;
-        
-        fishAI3 = object;
-        scene.add( fishAI3 );
-
-    } );
-
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
-
-        mixer4 = new THREE.AnimationMixer( object );
-
-        const action = mixer4.clipAction( object.animations[0] );
-        action.play();
-
-        object.traverse( function ( child ) {
-
-            if ( child.isMesh ) {
-
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        } );
-        object.position.y = 500;
-        object.position.x = 1000;
-        
-        fishAI4 = object;
-        scene.add( fishAI4 );
-    } );
-
-    // model aquarium
-    loader.load( '/FBX/Aquarium-opt.fbx', function ( object ) {
-
-        object.traverse( function ( child ) {
-
-            if ( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            }
-        } );
-
-        tLoader.load('/Texture/Pallete.png', function(texture){
-            object.traverse( function ( child ) {
-                if ( child.isMesh ){
-                    child.material.map = texture;
-                }
-            } );
-        });
-
-        // var matAquarium = new THREE.MeshToonMaterial({
-        //     map:  tLoader.load('/examples/Texture/Pallete.png')
-        // });
-        // var matGlass = new THREE.MeshBasicMaterial({
-        //     color: '#ffffff ',
-        //  });
-        //  let material = [matAquarium, matGlass];
-        //  object.material = matGlass;
-         var aquarium = object;
-        scene.add( aquarium );
-    } );
+    loadingmodel();
 
 
     renderer = new THREE.WebGLRenderer( { antialias: true } );
@@ -270,6 +125,7 @@ function setControlsOrbit() {
 function animate() {
 
     requestAnimationFrame( animate );
+    animateFish();
 
     fishmovement();
     if(lock){
@@ -307,18 +163,6 @@ function animate() {
         addFood();
     }
 
-    const delta = clock.getDelta();
-    //controlsFPS.update(delta);
-    if ( mixer0 ) 
-        mixer0.update( delta );
-    if ( mixer1 ) 
-        mixer1.update( delta );
-    if ( mixer2 ) 
-        mixer2.update( delta );
-    if ( mixer3 ) 
-        mixer3.update( delta );
-    if ( mixer4 ) 
-        mixer4.update( delta );
     
     renderer.render( scene, camera );
     stats.update();
