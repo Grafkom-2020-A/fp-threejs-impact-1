@@ -42,12 +42,12 @@ function init() {
     const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 5000, 5000 ), new THREE.MeshToonMaterial( { color: 0x999999, depthWrite: false } ) );
     mesh.rotation.x = - Math.PI / 2;
     mesh.receiveShadow = true;
-    scene.add( mesh );
+    //scene.add( mesh );
 
     const grid = new THREE.GridHelper( 5000, 100, 0x000000, 0x000000 );
     grid.material.opacity = 0.5;
     grid.material.transparent = true;
-    scene.add( grid );
+    //scene.add( grid );
 
     // model ikan
     loadingmodel();
@@ -156,7 +156,7 @@ function PlayMusicBackground(){
 
     const sound = new THREE.Audio( listener );
     const audioLoader = new THREE.AudioLoader();
-    audioLoader.load( '/Music/Music Background.mp3', function( buffer ) {
+    audioLoader.load( '/Music/Music.mp3', function( buffer ) {
         sound.setBuffer( buffer );
         sound.setLoop( true );
         sound.setVolume( 0.3 );

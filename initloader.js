@@ -106,16 +106,32 @@ function loadingmodel(){
             map: aquariumTexture,
         });
 
-        // tLoader.load('/Texture/Palette.png', function(texture){
-        //     object.traverse( function ( child ) {
-        //         if ( child.isMesh ){
-        //             child.material.map = texture;
-        //         }
-        //     } );
-        // });
-
         const aquarium = object;
         scene.add( aquarium );
+    } );
+
+    loader.load( '/FBX/Glass.fbx', function ( object ) {
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+                
+                const glassMaterial = child.material;
+                child.material = new THREE.MeshLambertMaterial();
+                glassMaterial.color.setRGB(255, 255, 255);
+                glassMaterial.opacity = 0.4;
+
+            }
+        } ); 
+
+        object.traverse( function ( child ) {
+
+
+
+  } );
+
+        const glass = object;
+        scene.add( glass );
     } );
 }
 
