@@ -3,7 +3,7 @@ var mixer0, mixer1, mixer2,mixer3,mixer4;
 function loadingmodel(){
     const loader = new THREE.FBXLoader();
     const tLoader = new THREE.TextureLoader();
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+    loader.load( '/FBX/Ikan-1.fbx', function ( object ) {
         mixer0 = new THREE.AnimationMixer( object );
         const action = mixer0.clipAction( object.animations[0] );
         action.play();
@@ -12,6 +12,9 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = new THREE.MeshToonMaterial({});
+                const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-1.png');
+                child.material.map = ikanTexture;
             }
 
         } );
@@ -21,7 +24,7 @@ function loadingmodel(){
 
     } );
 
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+    loader.load( '/FBX/Ikan-1.fbx', function ( object ) {
         mixer1 = new THREE.AnimationMixer( object );
         const action = mixer1.clipAction( object.animations[0] );
         action.play();
@@ -29,6 +32,9 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = new THREE.MeshToonMaterial({});
+                const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-2.png');
+                child.material.map = ikanTexture;
             }
         } );
         object.position.y = 800;
@@ -38,7 +44,7 @@ function loadingmodel(){
 
     } );
 
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+    loader.load( '/FBX/Ikan-1.fbx', function ( object ) {
         mixer2 = new THREE.AnimationMixer( object );
         const action = mixer2.clipAction( object.animations[0] );
         action.play();
@@ -46,6 +52,9 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = new THREE.MeshToonMaterial({});
+                const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-3.png');
+                child.material.map = ikanTexture;
             }
         } );
         object.position.y = 400;
@@ -56,7 +65,7 @@ function loadingmodel(){
 
     } );
 
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+    loader.load( '/FBX/Ikan-1.fbx', function ( object ) {
         mixer3 = new THREE.AnimationMixer( object );
         const action = mixer3.clipAction( object.animations[0] );
         action.play();
@@ -64,6 +73,9 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = new THREE.MeshToonMaterial({});
+                const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-4.png');
+                child.material.map = ikanTexture;
             }
         } );
         object.position.y = 1200;
@@ -74,7 +86,7 @@ function loadingmodel(){
 
     } );
 
-    loader.load( '/FBX/Ikan.fbx', function ( object ) {
+    loader.load( '/FBX/Ikan-1.fbx', function ( object ) {
         mixer4 = new THREE.AnimationMixer( object );
         const action = mixer4.clipAction( object.animations[0] );
         action.play();
@@ -83,6 +95,9 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = new THREE.MeshToonMaterial({});
+                const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-5.png');
+                child.material.map = ikanTexture;
             }
         } );
         object.position.y = 500;
@@ -98,13 +113,16 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+                child.material = new THREE.MeshToonMaterial({});
+                const aquariumTexture = new THREE.TextureLoader().load('/FBX/Texture/Palette.png');
+                child.material.map = aquariumTexture;
             }
         } );
 
-        const aquariumTexture = new THREE.TextureLoader().load('/FBX/Texture/Palette.png');
-        const aquariumMaterial = new THREE.MeshToonMaterial({
-            map: aquariumTexture,
-        });
+        
+        // const aquariumMaterial = new THREE.MeshToonMaterial({
+        //     map: aquariumTexture,
+        // });
 
         const aquarium = object;
         scene.add( aquarium );
@@ -117,7 +135,7 @@ function loadingmodel(){
                 child.material = new THREE.MeshLambertMaterial();
                 child.material.color.setRGB(255, 255, 255);
                 child.material.transparent = true;
-                child.material.opacity = 0.5;
+                child.material.opacity = 0.3;
 
             }
         } ); 

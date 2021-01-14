@@ -7,6 +7,8 @@ function addFood(){
                 child.material.map = null;
                 child.castShadow = true;
                 child.receiveShadow = false;
+                child.material = new THREE.MeshToonMaterial({color : '#ffa842'});
+                
             }
         } );
 
