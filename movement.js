@@ -1,3 +1,4 @@
+let movex =0 , movey = 0, movez = 0;
 function ditekan(event) {  
     //perpindahan AI
     if (event.keyCode == 49) // 1
@@ -76,32 +77,32 @@ function ditekan(event) {
     } 
     if (event.keyCode == 65) // A = 65
     {
-        fish.rotateOnAxis (fishaxisy,0.11,0.2);
+        movey =1;
         if(fishMovementSpeed <= 1)
             fishMovementSpeed += 0.1;
     } 
     if (event.keyCode == 68) // D = 68
     {
-        fish.rotateOnAxis (fishaxisy,-0.11,0.2);
+        movey = -1;
         if(fishMovementSpeed <= 1)
             fishMovementSpeed += 0.1;
     } 
 
     if (event.keyCode == 39) // right
     {
-        fish.rotateOnAxis (fishaxisz,0.1);
+        movez = 1;
     } 
     if (event.keyCode == 37) // left
     {
-        fish.rotateOnAxis (fishaxisz,-0.1);
+        movez = -1;
     } 
     if (event.keyCode ==  38) // up 
     {
-        fish.rotateOnAxis (fishaxisx,-0.1);
+        movex = -1;
     } 
     if (event.keyCode ==  40) // down
     {
-        fish.rotateOnAxis (fishaxisx,0.1);
+        movex = 1;
     } 
 
 }
@@ -110,6 +111,31 @@ function dilepas(event){
     if (event.keyCode ==  87) // W = 87
     {
         keyPressed = false;
+    } 
+    if (event.keyCode == 65) // A = 65
+    {
+        movey = 0;
+
+    } 
+    if (event.keyCode == 68) // D = 68
+    {
+        movey = 0;
+    }
+    if (event.keyCode == 39) // right
+    {
+        movez = 0;
+    } 
+    if (event.keyCode == 37) // left
+    {
+        movez = 0;
+    } 
+    if (event.keyCode ==  38) // up 
+    {
+        movex = 0;
+    } 
+    if (event.keyCode ==  40) // down
+    {
+        movex = 0;
     } 
 }
 
@@ -123,6 +149,24 @@ function followfish(){
 function fishmovement(){
     fish.getWorldPosition(fishloc);
     fish.translateZ(fishMovementSpeed); 
+    if(movex>0){
+        fish.rotateOnAxis (fishaxisx,0.03);
+    }
+    if(movex<0){
+        fish.rotateOnAxis (fishaxisx,-0.03);
+    }
+    if(movey>0){
+        fish.rotateOnAxis (fishaxisy,0.03);
+    }
+    if(movey<0){
+        fish.rotateOnAxis (fishaxisy,-0.03);
+    }
+    if(movez>0){
+        fish.rotateOnAxis (fishaxisz,0.03);
+    }
+    if(movez<0){
+        fish.rotateOnAxis (fishaxisz,-0.03);
+    }
     fish.getWorldPosition(fishlocafter);
     fishlocafter.sub(fishloc);
     fish.getWorldPosition(vec); 
