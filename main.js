@@ -144,30 +144,7 @@ function animate() {
 
     moveAI();
     worldcollider();
-
-
-    // remove food
-    if (food.length > 0){
-        for (var i =0; i<food.length; i++){
-            if (Math.abs(food[i].position.x - fish.position.x) <= 30 && Math.abs(food[i].position.y - fish.position.y) <= 30 && Math.abs(food[i].position.z - fish.position.z) <= 30){
-                //Fish Eat Food
-                removeFood(food[i], i);
-                PlayEatSound();
-            }
-            else if (food[i].position.y > 370){
-                food[i].position.y -= 1;
-            }
-            else {
-                removeFood(food[i], i);
-            }
-        }
-    }
-    // see if its time to spawn food
-    if(timeIs > (lastSpawn + spawnRate)){
-        lastSpawn = timeIs;
-        addFood();
-    }
-
+    foodCheck();
     
     renderer.render( scene, camera );
     stats.update();
