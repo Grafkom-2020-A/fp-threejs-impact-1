@@ -78,3 +78,256 @@ a, button, input, select {
 	margin-top: 20px;
 	padding: 10px;
 }
+
+
+.mediaViewInfo {
+	--web-view-name: Web 1920 – 1;
+	--web-view-id: Web_1920__1;
+	--web-scale-on-resize: true;
+	--web-enable-deep-linking: true;
+}
+:root {
+	--web-view-ids: Web_1920__1;
+}
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	border: none;
+}
+#Web_1920__1 {
+	position: absolute;
+	width: 1920px;
+	height: 1080px;
+	background-color: rgba(255,255,255,1);
+	overflow: hidden;
+	--web-view-name: Web 1920 – 1;
+	--web-view-id: Web_1920__1;
+	--web-scale-on-resize: true;
+	--web-enable-deep-linking: true;
+}
+#bg1 {
+	position: absolute;
+	width: 1920px;
+	height: 1080px;
+	left: 0px;
+	top: 0px;
+	overflow: visible;
+}
+#ThreeJS_Impact {
+	left: 305px;
+	top: 258px;
+	position: absolute;
+	overflow: visible;
+	width: 395px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: lighter;
+	font-size: 64px;
+	color: rgba(3,6,39,1);
+}
+#Aquaticanaa {
+	left: 318px;
+	top: 378px;
+	position: absolute;
+	overflow: visible;
+	width: 369px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 72px;
+	color: rgba(3,6,39,1);
+}
+#present {
+	opacity: 0.52;
+	left: 435px;
+	top: 325px;
+	position: absolute;
+	overflow: visible;
+	width: 99px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: Yu Gothic;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 28px;
+	color: rgba(3,6,39,1);
+}
+#Rectangle_1 {
+	opacity: 0.43;
+	fill: rgba(255,255,255,1);
+	stroke: rgba(112,112,112,1);
+	stroke-width: 1px;
+	stroke-linejoin: miter;
+	stroke-linecap: butt;
+	stroke-miterlimit: 4;
+	shape-rendering: auto;
+}
+.Rectangle_1 {
+	position: absolute;
+	overflow: visible;
+	width: 630px;
+	height: 336px;
+	left: 218px;
+	top: 523px;
+}
+#Kana_Rekha___05111840000005 {
+	left: 276px;
+	top: 563px;
+	position: absolute;
+	overflow: visible;
+	width: 390px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+	color: rgba(3,6,39,1);
+}
+#Khofifah_Nurlaela___0511184000 {
+	left: 276px;
+	top: 669px;
+	position: absolute;
+	overflow: visible;
+	width: 461px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+	color: rgba(3,6,39,1);
+}
+#Farel_Muhammad_Taqi___05111840 {
+	left: 276px;
+	top: 722px;
+	position: absolute;
+	overflow: visible;
+	width: 519px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+	color: rgba(3,6,39,1);
+}
+#Dimas_Aditya___05111840000015 {
+	left: 276px;
+	top: 616px;
+	position: absolute;
+	overflow: visible;
+	width: 406px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+	color: rgba(3,6,39,1);
+}
+#Jordan_Gilbert___0511184000008 {
+	left: 276px;
+	top: 775px;
+	position: absolute;
+	overflow: visible;
+	width: 418px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 30px;
+	color: rgba(3,6,39,1);
+}
+#Button_Play {
+	position: absolute;
+	width: 349px;
+	height: 86px;
+	left: 786px;
+	top: 954px;
+	overflow: visible;
+}
+#Rectangle_2 {
+	fill: rgba(24,112,160,1);
+	stroke: rgba(24,112,160,1);
+	stroke-width: 1px;
+	stroke-linejoin: miter;
+	stroke-linecap: butt;
+	stroke-miterlimit: 4;
+	shape-rendering: auto;
+}
+.Rectangle_2 {
+	position: absolute;
+	overflow: visible;
+	width: 349px;
+	height: 86px;
+	left: 0px;
+	top: 0px;
+}
+#Click_to_Play {
+	left: 90px;
+	top: 25px;
+	position: absolute;
+	overflow: visible;
+	width: 170px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 34px;
+	color: rgba(3,6,39,1);
+}
+#Rectangle_3 {
+	opacity: 0.43;
+	fill: rgba(255,255,255,1);
+	stroke: rgba(112,112,112,1);
+	stroke-width: 1px;
+	stroke-linejoin: miter;
+	stroke-linecap: butt;
+	stroke-miterlimit: 4;
+	shape-rendering: auto;
+}
+.Rectangle_3 {
+	position: absolute;
+	overflow: visible;
+	width: 584px;
+	height: 498px;
+	left: 1135px;
+	top: 361px;
+}
+#Tekan_space_untuk_naik_Tekan_c {
+	left: 1196px;
+	top: 453px;
+	position: absolute;
+	overflow: visible;
+	width: 438px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: lighter;
+	font-size: 32px;
+	color: rgba(3,6,39,1);
+}
+#How_to_Play {
+	left: 1196px;
+	top: 410px;
+	position: absolute;
+	overflow: visible;
+	width: 166px;
+	white-space: nowrap;
+	text-align: left;
+	font-family: HP Simplified Jpan;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 32px;
+	color: rgba(3,6,39,1);
+}
+

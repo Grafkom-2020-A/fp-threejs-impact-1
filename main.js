@@ -20,8 +20,8 @@ let fishlocafter= new THREE.Vector3();
 let vec = new THREE.Vector3();
 var keyPressed = false;
 
-init();
-animate();
+    init();
+    animate();
 
 function init() {
     const container = document.createElement( 'div' );
