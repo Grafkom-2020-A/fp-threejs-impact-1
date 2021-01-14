@@ -101,15 +101,20 @@ function loadingmodel(){
             }
         } );
 
-        tLoader.load('/Texture/Palette.png', function(texture){
-            object.traverse( function ( child ) {
-                if ( child.isMesh ){
-                    child.material.map = texture;
-                }
-            } );
+        const aquariumTexture = new THREE.TextureLoader().load('/FBX/Texture/Palette.png');
+        const aquariumMaterial = new THREE.MeshToonMaterial({
+            map: aquariumTexture,
         });
 
-        var aquarium = object;
+        // tLoader.load('/Texture/Palette.png', function(texture){
+        //     object.traverse( function ( child ) {
+        //         if ( child.isMesh ){
+        //             child.material.map = texture;
+        //         }
+        //     } );
+        // });
+
+        const aquarium = object;
         scene.add( aquarium );
     } );
 }

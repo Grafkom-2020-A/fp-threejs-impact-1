@@ -1,5 +1,3 @@
-
-
 function ditekan(event) {  
     //perpindahan AI
     if (event.keyCode == 49) // 1

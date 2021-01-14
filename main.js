@@ -21,10 +21,10 @@ function init() {
     document.body.appendChild( container );
 
     scene = new THREE.Scene();
-    setBackground();
+    scene.background = new THREE.Color( 'white' );
     //scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
 
-    const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 , 1 ); //0x444444
+    const hemiLight = new THREE.HemisphereLight( 0xffffff, 0x444444 , 0.5 ); //0x444444
     hemiLight.position.set( 0, 5000, 0 );
     scene.add( hemiLight );
 
@@ -144,7 +144,30 @@ function animate() {
 
     moveAI();
     worldcollider();
-    foodCheck();
+
+
+    // remove food
+    if (food.length > 0){
+        for (var i =0; i<food.length; i++){
+            if (Math.abs(food[i].position.x - fish.position.x) <= 30 && Math.abs(food[i].position.y - fish.position.y) <= 30 && Math.abs(food[i].position.z - fish.position.z) <= 30){
+                //Fish Eat Food
+                removeFood(food[i], i);
+                PlayEatSound();
+            }
+            else if (food[i].position.y > 370){
+                food[i].position.y -= 1;
+            }
+            else {
+                removeFood(food[i], i);
+            }
+        }
+    }
+    // see if its time to spawn food
+    if(timeIs > (lastSpawn + spawnRate)){
+        lastSpawn = timeIs;
+        addFood();
+    }
+
     
     renderer.render( scene, camera );
     stats.update();
