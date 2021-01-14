@@ -116,12 +116,13 @@ function setupControls() {
     // controlsOrbit = new THREE.FirstPersonControls( cam2 , renderer.domElement);
     
     controlsFPS = new THREE.FirstPersonControls(camera, renderer.domElement); // Handles camera control
-    controlsFPS.movementSpeed = 100000;
-    controlsFPS.lookSpeed = 10.0;
+    controlsFPS.movementSpeed = 5000;
+    controlsFPS.lookSpeed = 5.0;
     controlsFPS.lookVertical = true;
     controlsFPS.enabled = false;
     
     controlsOrbit = new THREE.OrbitControls( camera , renderer.domElement);
+    document.getElementById('hide_id').style.cursor = 'none';
 
     controls = controlsOrbit;
     camera.position.set(0,1000,-200);

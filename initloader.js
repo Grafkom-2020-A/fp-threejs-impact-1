@@ -140,11 +140,7 @@ function loadingmodel(){
             }
         } ); 
 
-        
         object.traverse( function ( child ) {
-
-
-
   } );
 
         const glass = object;
