@@ -12,7 +12,7 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshToonMaterial({});
+                child.material = new THREE.MeshToonMaterial({skinning: true});
                 const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-1.png');
                 child.material.map = ikanTexture;
             }
@@ -32,7 +32,7 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshToonMaterial({});
+                child.material = new THREE.MeshToonMaterial({skinning: true});
                 const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-2.png');
                 child.material.map = ikanTexture;
             }
@@ -52,7 +52,7 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshToonMaterial({});
+                child.material = new THREE.MeshToonMaterial({skinning: true});
                 const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-3.png');
                 child.material.map = ikanTexture;
             }
@@ -73,7 +73,7 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshToonMaterial({});
+                child.material = new THREE.MeshToonMaterial({skinning: true});
                 const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-4.png');
                 child.material.map = ikanTexture;
             }
@@ -95,7 +95,7 @@ function loadingmodel(){
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshToonMaterial({});
+                child.material = new THREE.MeshToonMaterial({skinning: true});
                 const ikanTexture = new THREE.TextureLoader().load('/FBX/Texture/IkanTexture-5.png');
                 child.material.map = ikanTexture;
             }
