@@ -43,7 +43,7 @@ function init() {
     dirLight.shadow.camera.right = 120;
     scene.add( dirLight );
 
-    scene.add( new THREE.CameraHelper( dirLight.shadow.camera ) );
+    //scene.add( new THREE.CameraHelper( dirLight.shadow.camera ) );
 
     // ground
     const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 5000, 5000 ), new THREE.MeshToonMaterial( { color: 0x999999, depthWrite: false } ) );
@@ -67,7 +67,7 @@ function init() {
             textureHeight: 1024
         } );
     
-        water.position.y = 1450;
+        water.position.y = 1460;
         water.rotation.x = Math.PI * - 0.5;
         scene.add( water );
     
@@ -119,10 +119,10 @@ function setupControls() {
     controlsFPS.movementSpeed = 5000;
     controlsFPS.lookSpeed = 5.0;
     controlsFPS.lookVertical = true;
+    controlsFPS.object.position.z = 100;
     controlsFPS.enabled = false;
     
     controlsOrbit = new THREE.OrbitControls( camera , renderer.domElement);
-    document.getElementById('hide_id').style.cursor = 'none';
 
     controls = controlsOrbit;
     camera.position.set(0,1000,-200);

@@ -44,10 +44,14 @@ function ditekan(event) {
             vec.y = 200;
             vec.z = -200;
             camera.position.add(vec);
-        }else{
+            
+            document.getElementById('Canvas').style.cursor = 'auto';
+        }
+        else{
             controlsOrbit.enabled = false;
             controlsFPS.enabled = true;
             controls = controlsFPS;
+            document.getElementById('Canvas').style.cursor = 'none';
         }
     }
     if (event.keyCode == 16) // Shift
@@ -99,6 +103,7 @@ function ditekan(event) {
     {
         fish.rotateOnAxis (fishaxisx,0.1);
     } 
+
 }
 
 function dilepas(event){
@@ -170,6 +175,7 @@ function worldcollider(){
         console.log(vec);
         vec.add(fishloc);
         fish.lookAt(vec);
+        fish.translateZ(-30);
         controls.update( clock.getDelta() );
     }
     
