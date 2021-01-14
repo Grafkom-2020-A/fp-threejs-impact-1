@@ -101,7 +101,7 @@ function loadingmodel(){
             }
         } );
 
-        tLoader.load('/Texture/Pallete.png', function(texture){
+        tLoader.load('/Texture/Palette.png', function(texture){
             object.traverse( function ( child ) {
                 if ( child.isMesh ){
                     child.material.map = texture;
