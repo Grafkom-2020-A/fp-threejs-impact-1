@@ -19,6 +19,6 @@ function setBackground(){
 
     //Malam
     if (time >= 19 || time < 5){
-        scene.background = new THREE.Color( '#add7ff' );
+        scene.background = new THREE.Color( '#304364' );
     }
 }

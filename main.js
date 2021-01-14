@@ -1,7 +1,14 @@
 
-let camera, scene, renderer, stats, timeIs, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
+let camera, scene, water, renderer, stats, timeIs, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
 let food = [], lastSpawn = -1, spawnRate = 6000; //food
 let fish, fishTemp, fishAI1, fishAI2, fishAI3, fishAI4, lastMove = -1, moveRate = 1000, fishMovementSpeed = 0; //fish
+
+const params = {
+    color: '#ffffff',
+    scale: 4,
+    flowX: 1,
+    flowY: 1
+};
 
 //fish movement
 const clock = new THREE.Clock();
@@ -48,6 +55,22 @@ function init() {
     grid.material.opacity = 0.5;
     grid.material.transparent = true;
     //scene.add( grid );
+
+    // water
+
+    const waterGeometry = new THREE.PlaneBufferGeometry( 3000, 1700 );
+
+    water = new THREE.Water( waterGeometry, {
+        color: params.color,
+        scale: params.scale,
+        flowDirection: new THREE.Vector2( params.flowX, params.flowY ),
+        textureWidth: 1024,
+        textureHeight: 1024
+    } );
+
+    water.position.y = 1450;
+    water.rotation.x = Math.PI * - 0.5;
+    scene.add( water );
 
     // model ikan
     loadingmodel();
