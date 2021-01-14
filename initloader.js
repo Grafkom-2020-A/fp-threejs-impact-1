@@ -113,17 +113,16 @@ function loadingmodel(){
     loader.load( '/FBX/Glass.fbx', function ( object ) {
         object.traverse( function ( child ) {
             if ( child.isMesh ) {
-                child.castShadow = true;
-                child.receiveShadow = true;
-                
                 const glassMaterial = child.material;
                 child.material = new THREE.MeshLambertMaterial();
-                glassMaterial.color.setRGB(255, 255, 255);
-                glassMaterial.opacity = 0.4;
+                child.material.color.setRGB(255, 255, 255);
+                child.material.transparent = true;
+                child.material.opacity = 0.5;
 
             }
         } ); 
 
+        
         object.traverse( function ( child ) {
 
 
