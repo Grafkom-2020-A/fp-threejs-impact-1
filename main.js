@@ -1,8 +1,8 @@
 
-let camera, scene, water, renderer, stats, timeIs, controls,bool_controls=true,cam1,cam2,con1,con2,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 0.075;
+let camera, scene, renderer, stats, timeIs, controls,bool_controls=true ,controlsOrbit,lock = false, controlsFPS, MOVESPEED = 100, LOOKSPEED = 100.075;
 let food = [], lastSpawn = -1, spawnRate = 6000; //food
 let fish, fishTemp, fishAI1, fishAI2, fishAI3, fishAI4, lastMove = -1, moveRate = 1000, fishMovementSpeed = 0; //fish
-
+let water;
 const params = {
     color: '#ffffff',
     scale: 4,
@@ -55,23 +55,22 @@ function init() {
     grid.material.opacity = 0.5;
     grid.material.transparent = true;
     //scene.add( grid );
+        // water
 
-    // water
+        const waterGeometry = new THREE.PlaneBufferGeometry( 3000, 1700 );
 
-    const waterGeometry = new THREE.PlaneBufferGeometry( 3000, 1700 );
-
-    water = new THREE.Water( waterGeometry, {
-        color: params.color,
-        scale: params.scale,
-        flowDirection: new THREE.Vector2( params.flowX, params.flowY ),
-        textureWidth: 1024,
-        textureHeight: 1024
-    } );
-
-    water.position.y = 1450;
-    water.rotation.x = Math.PI * - 0.5;
-    scene.add( water );
-
+        water = new THREE.Water( waterGeometry, {
+            color: params.color,
+            scale: params.scale,
+            flowDirection: new THREE.Vector2( params.flowX, params.flowY ),
+            textureWidth: 1024,
+            textureHeight: 1024
+        } );
+    
+        water.position.y = 1450;
+        water.rotation.x = Math.PI * - 0.5;
+        scene.add( water );
+    
     // model ikan
     loadingmodel();
 
@@ -83,9 +82,7 @@ function init() {
     container.appendChild( renderer.domElement );
     
     setupControls();
-    setControlsOrbit();
-    //setControlsFirstPerson();
-
+    
 
     window.addEventListener( 'resize', onWindowResize, false );
     document.addEventListener('keydown', ditekan);
@@ -104,67 +101,56 @@ function onWindowResize() {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
-
+    if(bool_controls){
+        controls.handleResize();
+    }
     renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
   
 function setupControls() {
 
-    cam1 = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
+    camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
     
     // cam2 = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 20000 );
-    // con1 = new THREE.FirstPersonControls( cam2 , renderer.domElement);
-    con1 = new THREE.OrbitControls( cam1 , renderer.domElement);
-    controlsFPS = new THREE.FirstPersonControls(cam1, renderer.domElement); // Handles camera control
-}
-
-function setControlsFirstPerson() {
-    // camera = cam1;
-    /*controls = con1;
-    camera.position.set( 0, 900, -190 );
-    controls.target.set( 0, 800, 0 );*/
-    // controls.lookkAt(0,800,0);
-
-	controlsFPS.lookSpeed = LOOKSPEED;
-    controlsFPS.movementSpeed = 20;
-    controlsFPS.noFly = false;
-    controlsFPS.lookVertical = true;
-    controlsFPS.constrainVertical = true;
-    controlsFPS.verticalMin = 1.0;
-    controlsFPS.verticalMax = 2.0;
-    controlsFPS.lon = -150;
-    controlsFPS.lat = 120;
+    // controlsOrbit = new THREE.FirstPersonControls( cam2 , renderer.domElement);
     
-    camera = cam1;
-}
+    controlsFPS = new THREE.FirstPersonControls(camera, renderer.domElement); // Handles camera control
+    controlsFPS.movementSpeed = 100000;
+    controlsFPS.lookSpeed = 10.0;
+    controlsFPS.lookVertical = true;
+    controlsFPS.enabled = false;
+    
+    controlsOrbit = new THREE.OrbitControls( camera , renderer.domElement);
 
-function setControlsOrbit() {
-    camera = cam1;
-    camera.position.set( 0, 900, -190 );
-    controls = con1;
-    // fish.getWorldPosition(200,800,0);
+    controls = controlsOrbit;
+    camera.position.set(0,1000,-200);
     controls.target.set( 0, 800, 0 );
 }
+
 
 function animate() {
 
     requestAnimationFrame( animate );
     animateFish();
-
-    fishmovement();
-    if(lock){
-        followfish();// camera
+    if(bool_controls){
+        fishmovement();
+        if(lock ){
+            followfish();// camera
+        }
+        if(keyPressed == false && fishMovementSpeed > 0.2)
+            fishMovementSpeed -= 0.05;
+        
+        if(fishMovementSpeed <= 0) 
+            fishMovementSpeed = 0.2;
+    }else{
+        
     }
-    if(keyPressed == false && fishMovementSpeed > 0.2)
-        fishMovementSpeed -= 0.05;
-    
-    if(fishMovementSpeed <= 0) 
-        fishMovementSpeed = 0.2;
+   
 
     timeIs = Date.now();
-
     moveAI();
+
     worldcollider();
     foodCheck();
 

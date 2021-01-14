@@ -32,6 +32,24 @@ function ditekan(event) {
     {
         lock = !lock;
     }
+
+    if (event.keyCode == 86) // v
+    {
+        bool_controls = !bool_controls;
+        if(bool_controls){
+            controlsFPS.enabled = false;
+            controlsOrbit.enabled = true;
+            controls = controlsOrbit;
+            vec.x = 0;
+            vec.y = 200;
+            vec.z = -200;
+            camera.position.add(vec);
+        }else{
+            controlsOrbit.enabled = false;
+            controlsFPS.enabled = true;
+            controls = controlsFPS;
+        }
+    }
     if (event.keyCode == 16) // Shift
     {
         fishMovementSpeed = 4;
@@ -99,20 +117,18 @@ function followfish(){
 
 function fishmovement(){
     fish.getWorldPosition(fishloc);
-    fish.translateZ(fishMovementSpeed);
+    fish.translateZ(fishMovementSpeed); 
     fish.getWorldPosition(fishlocafter);
     fishlocafter.sub(fishloc);
+    fish.getWorldPosition(vec); 
     camera.position.add(fishlocafter);
     camera.lookAt(fish.position);
-
-    fish.getWorldPosition(vec);
     controls.target = vec;
 }
 
 function worldcollider(){
-    fish.getWorldPosition(fishloc);
-
     //Collider Aquarium
+    fish.getWorldPosition(fishloc);
     if(fishloc.getComponent (0)>1500){
         fishMovementSpeed = 0;
         fish.position.x-=fishMovementSpeed+10;
@@ -137,12 +153,28 @@ function worldcollider(){
         fishMovementSpeed = 0;
         fish.position.z+=fishMovementSpeed+10;
     }
-    fish.getWorldPosition(fishlocafter);
-    fishlocafter.sub(fishloc);
-    camera.position.add(fishlocafter);
-    camera.lookAt(fish.position);
+
+    if(bool_controls){
+        fish.getWorldPosition(fishlocafter);
+        fishlocafter.sub(fishloc);
+        fish.getWorldPosition(vec);
+
+        camera.position.add(fishlocafter);
+        camera.lookAt(fish.position);
+        controls.target = vec;
+
+    }else{
+        camera.getWorldPosition(fishloc);
+        fish.position.set(fishloc.getComponent (0),fishloc.getComponent (1),fishloc.getComponent (2));
+        camera.getWorldDirection(vec);
+        console.log(vec);
+        vec.add(fishloc);
+        fish.lookAt(vec);
+        controls.update( clock.getDelta() );
+    }
     
-    if(lock){
+    
+    if(lock || !bool_controls ){
         if (camera.position.x > 1500) camera.position.x = 1500;
         if (camera.position.x < -1500) camera.position.x = -1500;
         if (camera.position.y > 1450) camera.position.y = 1450;
